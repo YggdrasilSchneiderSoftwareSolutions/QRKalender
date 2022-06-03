@@ -31,11 +31,18 @@ switch ($method) {
 }
 
 function handleGET($uri_parts) {
-    // ID kommt immer nach dem keyword in der URI
     if (in_array('kalender', $uri_parts)) {
-        $id_index = array_search('kalender', $uri_parts) + 1;
+        $kalenderService = new KalenderService();
+        $id_index = array_search('kalender', $uri_parts);
+        if ($id_index === false) { // keine ID vorhanden -> getAll
+            $result = $kalenderService->getAllKalender();
+            echo json_encode($result);
+        } else {
+            $result = $kalenderService->getKalender(++$id_index);
+            echo json_encode($result);
+        }
     } else if (in_array('eintrag')) {
-        $id_index = array_search('eintrag', $uri_parts) + 1;
+        
     }
 }
 
