@@ -7,6 +7,8 @@ header('Content-Type: application/json');
 
 include_once 'KalenderService.php';
 include_once 'EintragService.php';
+include_once 'ArtikelService.php';
+include_once 'SongService.php';
 
 // URI zerlegen, um später festzustellen, was aufgerufen werden soll
 $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -35,12 +37,13 @@ function handleGET($uri_parts) {
     // Es ist nur 'kalender' in der URI: GET /kalender/4711
     if (in_array('kalender', $uri_parts) && !in_array('eintrag', $uri_parts)) {
         $kalenderService = new KalenderService();
-        $id_index = array_search('kalender', $uri_parts); // FIXME Fall kann gar nicht eintreten
-        if ($id_index === false) { // keine ID vorhanden -> getAll
+        $id_index = array_search('kalender', $uri_parts);
+        if (++$id_index > count($uri_parts)) {
+            // keine ID vorhanden, -> getAll
             $result = $kalenderService->getAllKalender();
             echo json_encode($result);
         } else {
-            $result = $kalenderService->getKalender(++$id_index);
+            $result = $kalenderService->getKalender($id_index);
             echo json_encode($result);
         }
     } else if (in_array('eintrag')) {
@@ -50,11 +53,35 @@ function handleGET($uri_parts) {
             $id_index = array_search('kalender', $uri_parts);
             $result = $eintragService->getAllEintragForKalender(++$id_index);
             echo json_encode($result);
-        } else { // GET nur ein bestimmten Eintrag /eintrag/4711
-            $id_index = array_search('eintrag', $uri_parts);
-            $result = $eintragService->getEintrag(++$id_index);
-            echo json_encode($result);
+        } else {
+            // GET auf Artikel oder Song zu einem Eintrag /eintrag/4711/song/0815
+            if (in_array('artikel', $uri_parts)) {
+                $artikelService = new ArtikelService();
+                $id_index = array_search('artikel', $uri_parts);
+                $result = $artikelService->getArtikel(++$id_index);
+                echo json_encode($result);
+            } else if (in_array('song', $uri_parts)) {
+                $songService = new SongService();
+                $id_index = array_search('song', $uri_parts);
+                $result = $songService->getSong(++$id_index);
+                echo json_encode($result);
+            } else {
+                // GET auf einen bestimmten Eintrag /eintrag/4711
+                $id_index = array_search('eintrag', $uri_parts);
+                $result = $eintragService->getEintrag(++$id_index);
+                echo json_encode($result);
+            }
         }
+    } else if (in_array('artikel', $uri_parts)) {
+        // GET nur auf Artikel mit ID /artikel/4711
+        $id_index = array_search('artikel', $uri_parts);
+        $result = $eintragService->getEintrag(++$id_index);
+        echo json_encode($result);
+    } else if (in_array('song', $uri_parts)) {
+        // GET nur auf Song mit ID /song/4711
+        $id_index = array_search('song', $uri_parts);
+        $result = $eintragService->getEintrag(++$id_index);
+        echo json_encode($result);
     }
 }
 
