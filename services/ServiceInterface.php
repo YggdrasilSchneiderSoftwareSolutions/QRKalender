@@ -86,7 +86,33 @@ function handleGET($uri_parts) {
 }
 
 function handlePOST($uri_parts) {
-
+    // JSON-Body auslesen
+    $daten = json_decode(file_get_contents('php://input', true));
+    // Es ist nur 'kalender' in der URI: POST /kalender/
+    if (in_array('kalender', $uri_parts) && !in_array('eintrag', $uri_parts)) {
+        $kalenderService = new KalenderService();
+        echo json_encode $kalenderService->createKalender(trim($daten['bezeichnung']), trim($daten['empfaenger']));
+    } else if (in_array('eintrag') 
+                && (!in_array('artikel', $uri_parts) || !in_array('song', $uri_parts))) {
+        // POST eines Eintrages POST /kalender/4711/eintrag
+        $eintragService = new EintragService();
+        // Kalender-ID extrahieren
+        $id_index = array_search('kalender', $uri_parts);
+        // FIXME Wir brauchen die Eintrag-ID
+        $eintragId = $eintragService->createEintrag(++$id_index, trim($data['nummer']));
+        // Hier kommen evtl. auch gleich Artikel und Song mit
+        if (isset($data['artikel'])) {
+            $artikelService = new ArtikelService();
+            // TODO Bild hochladen oder passiert das schon irgendwie vorher?
+            $artikelService->createArtikel($eintragId, trim($data['artikel']['bildPfad']), trim($data['artikel']['inhalt']));
+        }
+        if (isset[$data['song']]) {
+            $songService = new SongService();
+            $songService->createSong($eintragId, trim($data['song']['link']));
+        }
+        // FIXME
+        echo 'success';
+    }
 }
 
 function handlePUT($uri_parts) {
