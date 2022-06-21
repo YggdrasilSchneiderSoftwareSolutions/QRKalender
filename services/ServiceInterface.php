@@ -120,5 +120,60 @@ function handlePUT($uri_parts) {
 }
 
 function handleDELETE($uri_parts) {
-
+    // Löschen muss von unten nach oben erfolgen
+    if (in_array('kalender', $uri_parts)) {
+        // ID extrahieren
+        $id_index = array_search('kalender', $uri_parts);
+        ++$id_index;
+        // Zuerst alle Einträge löschen
+        $eintragService = new EintragService();
+        $artikelService = new ArtikelService();
+        $songService = new SongService();
+        $alleEintraegeAmKalender = $eintragService->getAllEintragForKalender($id_index);
+        $anzahlEintraege = count($alleEintraegeAmKalender);
+        for ($i = 0; $i < $anzahlEintraege; $i++) {
+            $eintragId = $alleEintraegeAmKalender[$i]['id'];
+            // Artikel am Eintrag? -> löschen
+            $artikelAmEintrag = $artikelService->getArtikelForEintrag($eintragId);
+            if (!empty($artikelAmEintrag)) {
+                $artikelService->deleteArtikel($artikelAmEintrag['id']);
+            }
+            // Song am Eintrag? -> löschen
+            $songAmEintrag = $songService->getSongForEintrag($eintragId);
+            if (!empty($songAmEintrag)) {
+                $songService->deleteSong($songAmEintrag['id']);
+            }
+            // Eintrag löschen
+            $eintragService->deleteEintrag($eintragId);
+        }
+        // Kalender löschen
+        $kalenderService = new KalenderService();
+        $kalenderService->deleteKalender();
+    } else if (in_array('eintrag', $uri_parts)) {
+        // Ggf. Artikel am Eintrag löschen
+        $id_index = array_search('eintrag', $uri_parts);
+        ++$id_index;
+        $artikelService = new ArtikelService();
+        $artikelAmEintrag = $artikelService->getArtikelForEintrag($id_index);
+        if (!empty($artikelAmEintrag)) {
+            $artikelService->deleteArtikel($artikelAmEintrag['id']);
+        }
+        // Ggf. Song am Eintrag löschen
+        $songService = new SongService();
+        $songAmEintrag = $songService->getSongForEintrag($id_index);
+        if (!empty($songAmEintrag)) {
+            $songService->deleteSong($songAmEintrag['id']);
+        }
+        // Jetzt Eintrag löschen
+        $eintragService = new EintragService();
+        $eintragService->deleteEintrag($id_index);
+    } else if (in_array('artikel', $uri_parts)) {
+        $id_index = array_search('artikel', $uri_parts);
+        $artikelService = new ArtikelService();
+        $artikelService->deleteArtikel(++$id_index);
+    } else if (in_array('song', $uri_parts)) {
+        $id_index = array_search('song', $uri_parts);
+        $songService = new SongService();
+        $songService->deleteSong(++$id_index);
+    }
 }
