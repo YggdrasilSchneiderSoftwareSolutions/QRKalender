@@ -22,11 +22,15 @@ public class Eintrag {
     @NotNull
     private Kalender kalender;
 
+    /** Laufende Nummer des Kalendereintrags */
     private Integer nummer;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "eintrag")
-    private Artikel artikel;
+    /** Ein Bild, das über dem Text angezeigt wird */
+    private String bild;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "eintrag")
-    private Song song;
+    /** Der Text des Kalendereintrags */
+    private String inhalt;
+
+    /** Ein embedded Link z.B. zu einem Song auf Spotify oder Youtube */
+    private String link;
 }

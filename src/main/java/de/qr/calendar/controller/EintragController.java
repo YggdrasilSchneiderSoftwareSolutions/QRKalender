@@ -29,8 +29,9 @@ public class EintragController {
                 .map(eintrag -> {
                     eintrag.setKalender(updEintrag.getKalender());
                     eintrag.setNummer(updEintrag.getNummer());
-                    eintrag.setArtikel(updEintrag.getArtikel());
-                    eintrag.setSong(updEintrag.getSong());
+                    eintrag.setBild(updEintrag.getBild());
+                    eintrag.setInhalt(updEintrag.getInhalt());
+                    eintrag.setLink(updEintrag.getLink());
                     return eintragRepository.save(eintrag);
                 })
                 .orElseThrow();
