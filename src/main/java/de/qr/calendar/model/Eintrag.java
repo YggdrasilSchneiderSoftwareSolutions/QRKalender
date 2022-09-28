@@ -1,13 +1,18 @@
 package de.qr.calendar.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -32,7 +37,7 @@ public class Eintrag {
     /** Laufende Nummer des Kalendereintrags */
     private Integer nummer;
 
-    /** Ein Bild, das über dem Text angezeigt wird */
+    /** Ein Bild, das über dem Text angezeigt wird. Wird für die src-Property des img-Tags verwendet */
     private String bild;
 
     /** Der Text des Kalendereintrags */
@@ -41,4 +46,13 @@ public class Eintrag {
 
     /** Ein embedded Link z.B. zu einem Song auf Spotify oder Youtube */
     private String link;
+
+    @JsonFormat(pattern = "dd.MM.yyyy")
+    private LocalDate aufrufbarAb;
+
+    @CreationTimestamp
+    private LocalDateTime erstellungsdatum;
+
+    @UpdateTimestamp
+    private LocalDateTime aenderungsdatum;
 }

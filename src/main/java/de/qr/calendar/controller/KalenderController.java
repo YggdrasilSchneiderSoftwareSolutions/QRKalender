@@ -48,6 +48,8 @@ public class KalenderController {
                 .map(kalender -> {
                     kalender.setEmpfaenger(updKalender.getEmpfaenger());
                     kalender.setBezeichnung(updKalender.getBezeichnung());
+                    kalender.setGueltigVon(updKalender.getGueltigVon());
+                    kalender.setGueltigBis(updKalender.getGueltigBis());
                     return kalenderRepository.save(kalender);
                 })
                 .orElseThrow();
@@ -79,6 +81,7 @@ public class KalenderController {
                     eintrag.setBild(updEintrag.getBild());
                     eintrag.setInhalt(updEintrag.getInhalt());
                     eintrag.setLink(updEintrag.getLink());
+                    eintrag.setAufrufbarAb(updEintrag.getAufrufbarAb());
                     return eintragRepository.save(eintrag);
                 })
                 .orElseThrow();
