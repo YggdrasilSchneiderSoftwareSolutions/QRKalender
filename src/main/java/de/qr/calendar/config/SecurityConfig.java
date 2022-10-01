@@ -1,19 +1,21 @@
 package de.qr.calendar.config;
 
+import de.qr.calendar.model.User;
+import de.qr.calendar.service.UserManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
@@ -26,35 +28,42 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     @Bean
+    DaoAuthenticationProvider authProvider(UserManager userManager) {
+        DaoAuthenticationProvider dap = new DaoAuthenticationProvider();
+        dap.setPasswordEncoder(new BCryptPasswordEncoder());
+        dap.setUserDetailsService(userManager);
+        dap.setUserDetailsPasswordService(userManager);
+        return dap;
+    }
+
+/*    @Bean
     EmbeddedDatabase datasource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
                 .setName("qrkalender")
                 .addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
                 .build();
-    }
+    }*/
 
     @Bean
-    JdbcUserDetailsManager users(DataSource dataSource, PasswordEncoder encoder) {
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(encoder.encode("my_super_secret_password_1234_$%@!"))
-                .roles("ADMIN")
-                .build();
-        UserDetails christian = User.builder()
-                .username("christian")
-                .password(encoder.encode("meinTest1234"))
-                .roles("USER")
-                .build();
-        UserDetails max = User.builder()
-                .username("max")
-                .password(encoder.encode("meinKalender1234"))
-                .roles("USER")
-                .build();
-        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
-        jdbcUserDetailsManager.createUser(admin);
-        jdbcUserDetailsManager.createUser(christian);
-        return jdbcUserDetailsManager;
+    UserDetailsManager users(UserManager userManager, PasswordEncoder encoder) {
+        if (!userManager.userExists("admin")) {
+            User admin = User.builder()
+                    .username("admin")
+                    .password(encoder.encode("my_super_secret_password_1234_$%@!"))
+                    .usertype("ADMIN")
+                    .enabled(true)
+                    .build();
+            UserDetails guest = User.builder()
+                    .username("guest")
+                    .password(encoder.encode("1234"))
+                    .usertype("GUEST")
+                    .enabled(true)
+                    .build();
+            userManager.createUser(admin);
+            userManager.createUser(guest);
+        }
+        return userManager;
     }
 
 //    @Bean
