@@ -1,0 +1,79 @@
+:root {
+    font-size: 16px;
+    font-family: "Reem Kufi Fun", "sans-serif";
+}
+
+body {
+    margin: 0;
+    position: relative;
+    z-index: -1;
+    display: grid;
+    grid-auto-rows: 100px;
+    grid-template-columns: 40vw 60vw;
+    grid-template-areas:
+        "headerleft headerright"
+        "logoleft logoright"
+        "loginleft loginright";
+    justify-items: center;
+    align-items: baseline;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    z-index: -2;
+    width: 40vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: linear-gradient(75deg, #090729, #000000);
+}
+
+body::after {
+    content: "";
+    position: absolute;
+    z-index: -2;
+    width: 60vw;
+    height: 100vh;
+    top: 0;
+    left: 40vw;
+    background: linear-gradient(75deg, #4b0c85 50%, #6e1cba);
+}
+
+#label-div {
+    text-align: right;
+    color: orange;
+    grid-row: 4 / 5;
+    padding-right: 0.5em;
+}
+
+#login-div {
+    display: grid;
+    grid-template-columns: min-content min-content;
+    gap: 0.75em;
+    color: #319915;
+    grid-row: 4 / 5;
+    padding-left: 0.5em;
+}
+
+.left-side-element {
+    text-align: right;
+    justify-self: end;
+    color: #ffa600;
+}
+
+.right-side-element {
+    text-align: left;
+    justify-self: start;
+    color: #319915;
+}
+
+.logo {
+    max-height: 100px;
+}
+
+@media screen and (max-width: 420px) {
+    #login-div {
+        grid-template-columns: min-content;
+    }
+}
