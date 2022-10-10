@@ -8,9 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 
 @SpringBootTest
 @Slf4j
+@Profile("test")
 class CalendarApplicationTests {
 
 	@Autowired
@@ -50,7 +52,7 @@ class CalendarApplicationTests {
 		assert eintrag2.equals(checkEintrag2);
 		log.info("Speichern erfolgreich " + eintrag2);
 
-		//kalenderRepository.deleteById(kalender.getId());
+		kalenderRepository.deleteById(kalender.getId());
 	}
 
 }

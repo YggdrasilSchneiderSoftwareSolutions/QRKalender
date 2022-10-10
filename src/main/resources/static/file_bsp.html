@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Beispiel</title>
+</head>
+<body>
+    <input id="fileupload" type="file" name="fileupload" />
+    <button id="upload-button" onclick="uploadFile()"> Upload </button></br>
+    <button id="download-button" onclick="downloadFile()"> Download </button></br>
+    <button id="delete-button" onclick="deleteFile()"> Löschen </button>
+
+    <div id="downloadedImage"></div>
+
+    <!-- Ajax JavaScript Dateiaufrufe zum Spring Boot Backend -->
+    <script>
+        const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+        // FIXME: Hier UUID und Bildname hardcoded für Test!
+        const testUUID = 'ef392bcd-1118-42c1-88f9-cf74c8ec2ea2';
+        const testBild = 'IMG_2486.jpg';
+
+        async function uploadFile() {
+            let formData = new FormData();
+            formData.append("file", fileupload.files[0]);
+            let response = await fetch('/file/upload/' + testUUID, {
+                method: "POST",
+                body: formData,
+                headers: { 'X-XSRF-TOKEN': csrfToken }
+            });
+
+            if (response.status == 200) {
+                alert("Datei erfolgreich hochgeladen.");
+            } else {
+                alert("Fehler: " + response.status);
+            }
+        }
+
+        async function downloadFile() {
+            let response = await fetch('/file/download/' + testUUID + '/' + testBild, {
+                method: "GET",
+                headers: { 'X-XSRF-TOKEN': csrfToken }
+            })
+
+            if (response.status == 200) {
+                alert("Datei erfolgreich geladen.");
+                const imageBlob = await response.blob()
+                const reader = new FileReader();
+                reader.readAsDataURL(imageBlob);
+                reader.onloadend = () => {
+                    const base64data = reader.result;
+                    console.log(base64data);
+                    document.querySelector('#downloadedImage').innerHTML = '<img src="' + base64data + '" </img>';
+                }
+            } else {
+                alert("Fehler: " + response.status);
+            }
+        }
+
+        async function deleteFile() {
+            let response = await fetch('/file/delete/' + testUUID + '/' + testBild, {
+                method: "DELETE",
+                headers: { 'X-XSRF-TOKEN': csrfToken }
+            });
+
+            if (response.status == 200) {
+                alert("Datei erfolgreich gelöscht.");
+            } else {
+                alert("Fehler: " + response.status);
+            }
+        }
+    </script>
+</body>
+</html>
