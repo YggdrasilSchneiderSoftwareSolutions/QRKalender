@@ -51,11 +51,6 @@ public class FileServiceImpl implements FileService {
                 .normalize()
                 .toAbsolutePath();
 
-        // Securitycheck
-        if (!zielOrdner.getParent().startsWith(rootLocation.toAbsolutePath())) {
-            throw new StorageException("Keine Speicherung der Datei außerhalb des Zielverzeichnisses!");
-        }
-
         // Ordner für den Eintrag anlegen, falls nicht vorhanden (entspricht UUID als Name)
         if (!zielOrdner.toFile().exists()) {
             try {
@@ -68,6 +63,11 @@ public class FileServiceImpl implements FileService {
         Path zielDatei = zielOrdner.resolve(Paths.get(file.getOriginalFilename()))
                 .normalize()
                 .toAbsolutePath();
+
+        // Securitycheck
+        if (!zielDatei.getParent().startsWith(rootLocation.toAbsolutePath())) {
+            throw new StorageException("Keine Speicherung der Datei außerhalb des Zielverzeichnisses!");
+        }
 
         try(InputStream inputStream = file.getInputStream()) {
             Files.copy(inputStream, zielDatei, StandardCopyOption.REPLACE_EXISTING);
