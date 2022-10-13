@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>QRKalender - Admin panel</title>
+        <link rel="stylesheet" href="./style/general.css" />
+        <link rel="stylesheet" href="./style/editcalendar.css" />
+        <script
+            rel="text/javascript"
+            src="./scripts/editCalendarMain.js"
+        ></script>
+    </head>
+
+    <body>
+        <!-- Header row (static content) -->
+        <header>
+            <div id="left-header-div">
+                <img
+                    src="./img/logoleft.png"
+                    alt="logoleft"
+                    id="left-logo-image"
+                    class="logo-image"
+                />
+            </div>
+
+            <div id="right-header-div">
+                <img
+                    src="./img/logoright.png"
+                    alt="logoright"
+                    class="logo-image"
+                />
+                <h1>Kalender verwalten</h1>
+            </div>
+        </header>
+
+        <main>
+            <!-- Edit area (starting point, dynamic content) -->
+            <!-- Calendar section -- select / create /delete -->
+            <div
+                id="choose-calendar-label-div"
+                class="left-side-div row-placement-div main-section-div"
+            >
+                <h2 id="choose-calendar-label">Kalender</h2>
+            </div>
+
+            <div class="right-side-div row-placement-div editing-div">
+                <div class="table-div">
+                    <table>
+                        <thead id="thead-calendars">
+                            <tr>
+                                <th>Bezeichnung</th>
+                                <th>Empf&auml;nger</th>
+                                <th>Gilt von</th>
+                                <th>Gilt bis</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-calendars">
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button id="edit-calendar-button"></button>
+                <button id="add-calendar-button"></button>
+                <button id="delete-calendar-button"></button>
+            </div>
+
+            <!-- Calendar subsection -- edit old/new -->
+            <div
+                id="add-edit-calendar-label-div"
+                class="left-side-div row-placement-div"
+            >
+                <h3 id="add-edit-calendar-label">N/A</h3>
+                <button id="save-calendar-button"></button>
+                <button id="cancel-calendar-button"></button>
+            </div>
+
+            <div
+                id="add-edit-calendar-editing-div"
+                class="right-side-div row-placement-div editing-div"
+            >
+                <label for="input-bezeichnung">Bezeichnung</label>
+                <input
+                    type="text"
+                    name="input-bezeichnung"
+                    id="input-bezeichnung"
+                />
+
+                <label for="input-empfaenger">Empf&auml;nger</label>
+                <input
+                    type="text"
+                    name="input-empfaenger"
+                    id="input-empfaenger"
+                />
+
+                <label for="input-gilt-von">Gilt von</label>
+                <input type="date" name="input-gilt-von" id="input-gilt-von" />
+
+                <label for="input-gilt-bis">Gilt bis</label>
+                <input type="date" name="input-gilt-bis" id="input-gilt-bis" />
+            </div>
+
+            <!-- Entry section -- select / create /delete -->
+            <div
+                id="choose-entry-label-div"
+                class="left-side-div row-placement-div main-section-div"
+            >
+                <h2 id="choose-entry-label">Eintrag</h2>
+            </div>
+
+            <div
+                id="choose-entry-editing-div"
+                class="right-side-div row-placement-div editing-div"
+            >
+                <div class="table-div">
+                    <table>
+                        <thead id="thead-entries">
+                            <tr>
+                                <th>Bezeichnung</th>
+                                <th>Bild</th>
+                                <th>Gilt von</th>
+                                <th>Gilt bis</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-entries">
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button id="edit-entry-button"></button>
+                <button id="add-entry-button"></button>
+                <button id="delete-entry-button"></button>
+            </div>
+
+            <!-- Entry subsection -- edit old/new -->
+            <div
+                id="add-edit-entry-label-div"
+                class="left-side-div row-placement-div"
+            >
+                <h3 id="add-edit-entry-label">N/A</h3>
+                <button id="save-entry-button"></button>
+                <button id="cancel-entry-button"></button>
+            </div>
+
+            <div
+                id="add-edit-entry-editing-div"
+                class="right-side-div row-placement-div editing-div"
+            >
+                <label for="input-bezeichnung">Bezeichnung</label>
+                <input
+                    type="text"
+                    name="input-bezeichnung"
+                    id="input-bezeichnung"
+                />
+
+                <label for="input-inhalt">Inhalt</label>
+                <textarea
+                    name="input-inhalt"
+                    id="input-inhalt"
+                    placeholder="Nachricht hier eingeben"
+                >
+                </textarea>
+
+                <label for="input-link">Link</label>
+                <input type="url" name="input-link" id="input-link" />
+
+                <div id="image-thumbnail"></div>
+                <button id="upload-image-button"></button>
+            </div>
+        </main>
+    </body>
+</html>

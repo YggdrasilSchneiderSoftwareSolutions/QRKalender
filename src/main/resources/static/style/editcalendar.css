@@ -1,0 +1,321 @@
+/*
+######################################
+HTML Element selectors (incl. pseudo)
+######################################
+*/
+:root {
+    font-size: 16px;
+    font-family: "Reem Kufi Fun", "sans-serif";
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    padding: 0;
+    z-index: -1;
+    height: 100vh;
+    width: 100vw;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    z-index: -2;
+    width: 25%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(75deg, #090729, #000000);
+}
+
+body::after {
+    content: "";
+    position: absolute;
+    z-index: -2;
+    width: 75%;
+    height: 100%;
+    top: 0;
+    left: 25vw;
+    background: linear-gradient(75deg, #4b0c85 50%, #6018a3);
+}
+
+header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: sticky;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    padding: 0;
+}
+
+header::before {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    bottom: -15px;
+    left: 0;
+    width: 25%;
+    height: 15px;
+    background: linear-gradient(180deg, #000000, transparent);
+}
+header::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    bottom: -15px;
+    left: 25%;
+    width: 75%;
+    height: 15px;
+    background: linear-gradient(180deg, #4b0c85, transparent);
+}
+
+main {
+    display: grid;
+    align-content: start;
+    position: relative;
+    z-index: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    grid-template-columns: 25vw 75vw;
+    align-items: start;
+    height: calc(100vh - 110px);
+    padding-top: 15px;
+}
+
+h1 {
+    color: #ffa600;
+    margin-top: 2.5vh;
+    justify-self: center;
+    font-size: 1.6em;
+    display: inline-block;
+    padding: 0;
+    margin: 0 0 0 1em;
+}
+
+h2 {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+h3 {
+    font-size: 1em;
+    margin: 0;
+}
+
+img {
+    width: auto;
+}
+
+label {
+    font-weight: bold;
+}
+
+table {
+    border-collapse: collapse;
+}
+th {
+    padding: 0.5em 0.35em 0.2em;
+    color: #ffa600;
+}
+
+td {
+    padding: 0.5em 0.35em 0.2em;
+    color: #ffa600;
+    border-bottom: 1px solid #ffa6006c;
+}
+
+thead {
+    position: sticky;
+    z-index: 1;
+    top: 0;
+    margin: 3px;
+    background-color: black;
+}
+
+thead::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    bottom: -3px;
+    left: 0;
+    background-color: #ffa600;
+    height: 3px;
+    width: 100%;
+}
+
+tbody {
+    overflow: scroll;
+}
+
+button {
+    border: 3px solid #319915;
+    border-radius: 7px;
+    width: 32px;
+    height: 32px;
+}
+
+/*
+######################################
+ID selectors
+######################################
+*/
+#left-header-div {
+    flex: 1 1 1;
+    width: 25%;
+    height: 45px;
+    padding: 20px 0;
+    background: #000000;
+}
+
+#right-header-div {
+    flex: 3 1 1;
+    width: 75%;
+    height: 45px;
+    padding: 20px 0;
+    background: #4b0c85;
+}
+
+#left-logo-image {
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+#input-inhalt {
+    resize: vertical;
+}
+
+#edit-calendar-button,
+#edit-entry-button {
+    background: black url("../img/editIcon.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 75%;
+}
+
+#add-calendar-button,
+#add-entry-button {
+    background: black url("../img/addIcon.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 75%;
+}
+
+#delete-calendar-button,
+#delete-entry-button {
+    background: black url("../img/delIcon.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 75%;
+}
+
+#save-calendar-button,
+#save-entry-button {
+    display: block;
+    margin-top: 0.7em;
+    margin-left: auto;
+    margin-right: 0;
+    background: black url("../img/saveIcon.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 75%;
+    border: 3px solid #ffa600;
+}
+
+#cancel-calendar-button,
+#cancel-entry-button {
+    display: block;
+    margin-top: 0.7em;
+    margin-left: auto;
+    margin-right: 0;
+    background: black url("../img/cancelIcon.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 75%;
+    border: 3px solid #ffa600;
+}
+
+#upload-image-button {
+    background: black url("../img/uploadIcon.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 75%;
+}
+
+#image-thumbnail {
+    height: 100px;
+    width: 100px;
+    background: #000000d0;
+    border-radius: 7px;
+}
+
+/*
+######################################
+Class selectors
+######################################
+*/
+.logo-image {
+    max-height: 40px;
+    margin: 0;
+}
+
+.main-section-div {
+    position: relative;
+}
+
+.main-section-div::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    width: 100vw;
+    height: 2px;
+    top: 0;
+    right: -77vw;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 166, 0, 0.5) 25%,
+        rgba(255, 166, 0, 1) 75%,
+        rgb(254, 225, 4)
+    );
+
+    transform: skewX(45deg);
+}
+
+.editing-div {
+    display: grid;
+    grid-template-columns: min-content min-content;
+    gap: 0.75em;
+    grid-column: 2 / 4;
+}
+
+.left-side-div {
+    text-align: right;
+    justify-self: end;
+    color: #ffa600;
+    padding: 1em 0.5em;
+}
+
+.right-side-div {
+    text-align: left;
+    justify-self: start;
+    padding: 1em 1em;
+}
+
+.table-div {
+    grid-column: 1/4;
+    height: fit-content;
+    max-height: 25vh;
+    overflow: auto;
+    width: fit-content;
+    border-radius: 7px;
+    border-collapse: collapse;
+    background-color: #000000d0;
+    padding: 0;
+    margin: 0;
+    font-size: 0.85em;
+}
