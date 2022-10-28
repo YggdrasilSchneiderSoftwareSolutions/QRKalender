@@ -2,13 +2,18 @@ package de.qr.calendar;
 
 import de.qr.calendar.model.Eintrag;
 import de.qr.calendar.model.Kalender;
+import de.qr.calendar.qrcode.QrCodeGenerator;
 import de.qr.calendar.repository.EintragRepository;
 import de.qr.calendar.repository.KalenderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @SpringBootTest
 @Slf4j
@@ -19,8 +24,13 @@ class CalendarApplicationTests {
 	private KalenderRepository kalenderRepository;
 	@Autowired
 	private EintragRepository eintragRepository;
+	@Autowired
+	private QrCodeGenerator qrCodeGenerator;
 
-	@Test
+	@Value("${file.storage.storage-location}")
+	private String storageLocation;
+
+	//@Test
 	void testWorkflow() {
 		Kalender kalender = new Kalender();
 		kalender.setBezeichnung("Junit Testkalender");
@@ -53,6 +63,15 @@ class CalendarApplicationTests {
 		log.info("Speichern erfolgreich " + eintrag2);
 
 		kalenderRepository.deleteById(kalender.getId());
+	}
+
+	//@Test
+	void testQrCode() {
+		qrCodeGenerator.createQrCodeAsImageFile("https://www.google.com", "Test.png");
+		Path datei = Paths.get(System.getProperty("user.home"), storageLocation, "Test.png")
+				.toAbsolutePath();
+		log.info("Testdatei: " + datei);
+		assert datei.toFile().exists();
 	}
 
 }

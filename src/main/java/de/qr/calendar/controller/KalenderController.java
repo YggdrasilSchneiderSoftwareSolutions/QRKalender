@@ -2,13 +2,27 @@ package de.qr.calendar.controller;
 
 import de.qr.calendar.model.Eintrag;
 import de.qr.calendar.model.Kalender;
+import de.qr.calendar.qrcode.QrCodeGenerator;
 import de.qr.calendar.repository.EintragRepository;
 import de.qr.calendar.repository.KalenderRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Slf4j
 @RestController
@@ -19,11 +33,18 @@ public class KalenderController {
 
     private EintragRepository eintragRepository;
 
+    private QrCodeGenerator qrCodeGenerator;
+
+    @Value("${app.server.domain}")
+    private String serverDomain;
+
     @Autowired
     public KalenderController(KalenderRepository kalenderRepository,
-                              EintragRepository eintragRepository) {
+                              EintragRepository eintragRepository,
+                              QrCodeGenerator qrCodeGenerator) {
         this.kalenderRepository = kalenderRepository;
         this.eintragRepository = eintragRepository;
+        this.qrCodeGenerator = qrCodeGenerator;
     }
 
     @GetMapping(path = "/all", produces = "application/json")
@@ -92,5 +113,51 @@ public class KalenderController {
         Kalender kalender = kalenderRepository.findById(kalenderId)
                 .orElseThrow();
         eintragRepository.deleteById(eintragId);
+    }
+
+    @GetMapping(path = "/zip/{kalenderId}", produces = "application/zip")
+    public ResponseEntity<byte[]> getQrCodesAsZip(@PathVariable UUID kalenderId) {
+        Kalender kalender = kalenderRepository.findById(kalenderId)
+                .orElseThrow();
+
+        byte[] zipFile = new byte[0];
+
+        log.info("Erstelle zip-File für Kalender {} - {}", kalender.getId(), kalender.getBezeichnung());
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            var zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
+
+            // einzelne QR-Dateien in Liste speichern
+            List<File> qrCodeFiles = kalender.getEintraege().stream()
+                    .map(eintrag -> {
+                        String qrCodeUrl = serverDomain + eintrag.getId();
+                        String qrCodeFilename = eintrag.getNummer() + ".png";
+                        Path qrDatei = qrCodeGenerator.createQrCodeAsImageFile(qrCodeUrl, qrCodeFilename);
+                        return qrDatei.toFile();
+                    })
+                    .collect(Collectors.toList());
+            log.info(qrCodeFiles.size() + " QR-Codes gefunden");
+            for (File file : qrCodeFiles) {
+                zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
+                FileInputStream fileInputStream = new FileInputStream(file);
+
+                IOUtils.copy(fileInputStream, zipOutputStream);
+
+                fileInputStream.close();
+                zipOutputStream.closeEntry();
+            }
+            zipOutputStream.close();
+            zipFile = byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            log.error(e.getLocalizedMessage());
+            return ResponseEntity
+                    .internalServerError()
+                    .body(zipFile);
+        }
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + kalender.getBezeichnung() + ".zip\"")
+                .body(zipFile);
     }
 }

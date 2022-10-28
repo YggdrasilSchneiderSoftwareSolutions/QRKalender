@@ -42,12 +42,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void saveFile(UUID eintragId, MultipartFile file) {
+    public void saveFile(UUID kalenderId, MultipartFile file) {
         if (file.isEmpty()) {
             throw new StorageException("Datei ist leer - keine Speicherung!");
         }
 
-        Path zielOrdner = rootLocation.resolve(Paths.get(eintragId.toString()))
+        Path zielOrdner = rootLocation.resolve(Paths.get(kalenderId.toString()))
                 .normalize()
                 .toAbsolutePath();
 

@@ -27,17 +27,17 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @PostMapping(path = "/upload/{eintragId}")
+    @PostMapping(path = "/upload/{kalenderId}")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file,
-                                                   @PathVariable UUID eintragId) {
-        log.info("Speichere Datei: {} für UUID {}", file.getOriginalFilename(), eintragId.toString());
-        fileService.saveFile(eintragId, file);
+                                                   @PathVariable UUID kalenderId) {
+        log.info("Speichere Datei: {} für UUID {}", file.getOriginalFilename(), kalenderId.toString());
+        fileService.saveFile(kalenderId, file);
         return ResponseEntity.ok("Datei erfolgreich gespeichert: " + file.getOriginalFilename());
     }
 
-    @DeleteMapping(path = "/delete/{eintragId}/{filename}")
-    public ResponseEntity<String> handleFileDelete(@PathVariable UUID eintragId, @PathVariable String filename) {
-        String zielDatei = eintragId
+    @DeleteMapping(path = "/delete/{kalenderId}/{filename}")
+    public ResponseEntity<String> handleFileDelete(@PathVariable UUID kalenderId, @PathVariable String filename) {
+        String zielDatei = kalenderId
                 + FileSystems.getDefault().getSeparator()
                 + filename;
         log.info("Lösche Datei: " + zielDatei);
@@ -45,11 +45,11 @@ public class FileController {
         return ResponseEntity.ok("Datei erfolgreich gespeichert: " + filename);
     }
 
-    @GetMapping("/download/{eintragId}/{filename:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String eintragId,
+    @GetMapping("/download/{kalenderId}/{filename:.+}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String kalenderId,
                                                  @PathVariable String filename,
                                                  HttpServletRequest request) {
-        String zielDatei = eintragId
+        String zielDatei = kalenderId
                 + FileSystems.getDefault().getSeparator()
                 + filename;
         // Datei als Resource laden
@@ -75,12 +75,4 @@ public class FileController {
                         + resource.getFilename() + "\"")
                 .body(resource);
     }
-
-    /*@GetMapping("/")
-    public String message(Model model) {
-
-        model.addAttribute("message", "Hallo Welt");
-
-        return "fileupload";
-    }*/
 }
