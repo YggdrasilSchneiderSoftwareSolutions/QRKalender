@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.UUID;
 
 @Slf4j
@@ -22,12 +25,12 @@ import java.util.UUID;
 public class EintragController {
 
     private EintragRepository eintragRepository;
-    @Autowired
     private FileService fileService;
 
     @Autowired
-    public EintragController(EintragRepository eintragRepository) {
+    public EintragController(EintragRepository eintragRepository, FileService fileService) {
         this.eintragRepository = eintragRepository;
+        this.fileService = fileService;
     }
 
     @GetMapping("/qr")
@@ -45,7 +48,19 @@ public class EintragController {
                 + eintrag.getBild();
         // Datei als Resource laden
         Resource resource = fileService.getFileAsResource(zielDatei);
-        model.addAttribute("eintragImage", resource);
+        // Datei in Base64-String konvertieren und Content-Type ermitteln
+        String encodedString = "";
+        String contentType = "";
+        try {
+            encodedString = Base64.getMimeEncoder()
+                    .encodeToString(Files.readAllBytes(resource.getFile().toPath()));
+            contentType = Files.probeContentType(resource.getFile().toPath());
+        } catch (IOException e) {
+            log.error(e.getLocalizedMessage());
+        }
+
+        model.addAttribute("imageContentType", contentType);
+        model.addAttribute("eintragImage", encodedString);
 
         return "eintrag";
     }

@@ -41,7 +41,7 @@ body, html {
     <!-- About Container -->
     <div class="w3-container" id="about">
       <div class="w3-content" style="max-width:700px">
-        <img th:if="${eintrag.bild != null}" id="eintragImage" th:src="${eintragImage}" style="width:100%;max-width:1000px" class="w3-margin-top">
+        <img th:if="${eintrag.bild != null}" id="eintragImage" th:src="'data:' + ${imageContentType} + ';base64,' + ${eintragImage}" style="width:100%;max-width:1000px" class="w3-margin-top">
         <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide" th:text="${#temporals.format(today, 'dd.MM.yyyy')}"></span></h5>
         <p th:text="${eintrag.inhalt}"></p>
       </div>
@@ -54,28 +54,5 @@ body, html {
   <footer class="w3-center w3-light-grey w3-padding-48 w3-large">
     <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">w3.css</a></p>
   </footer>
-  <script>
-    async function downloadFile(kalenderId, filename) {
-        let response = await fetch('/api/file/download/' + kalenderId + '/' + filename, {
-            method: "GET"
-            /*headers: { 'X-XSRF-TOKEN': csrfToken }*/
-        })
-
-        if (response.status == 200) {
-            alert("Datei erfolgreich geladen.");
-            const imageBlob = await response.blob()
-            const reader = new FileReader();
-            reader.readAsDataURL(imageBlob);
-            reader.onloadend = () => {
-                const base64data = reader.result;
-                console.log(base64data);
-                //document.querySelector('#eintragImage').innerHTML = '<img src="' + base64data + '" </img>';
-                document.getElementById('eintragImage').src = base64data;
-            }
-        } else {
-            alert("Fehler: " + response.status);
-        }
-    }
-  </script>
 </body>
 </html>
