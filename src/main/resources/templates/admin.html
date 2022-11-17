@@ -20,13 +20,14 @@
             <th>Editieren</th>
             <th>Einträge</th>
             <th>Löschen</th>
+            <th>QR-Codes zip</th>
         </tr>
         </thead>
         <tbody>
         <h1>Kalender</h1>
         <h2>Übersicht</h2>
         <tr th:if="${allKalender.empty}">
-            <td colspan="11">Keine Kalender gefunden</td>
+            <td colspan="12">Keine Kalender gefunden</td>
         </tr>
         <tr th:each="kalender : ${allKalender}">
             <td th:text="${kalender.id}"></td>
@@ -54,6 +55,9 @@
                     <input type="hidden" name="kalenderId" id="deleteKalenderId" th:value="${kalender.id}" />
                     <button type="submit">Löschen</button>
                 </form>
+            </td>
+            <td>
+                <a th:href="'/api/kalender/zip/' + ${kalender.id}">QR-Codes generieren</a>
             </td>
         </tr>
         </tbody>

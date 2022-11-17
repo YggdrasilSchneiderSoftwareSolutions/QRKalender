@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -129,7 +130,9 @@ public class KalenderRestController {
             // einzelne QR-Dateien in Liste speichern
             List<File> qrCodeFiles = kalender.getEintraege().stream()
                     .map(eintrag -> {
-                        String qrCodeUrl = serverDomain + eintrag.getId();
+                        String qrCodeUrl = Paths
+                                .get(serverDomain, "eintrag", "qr?id=" + eintrag.getId())
+                                .toString();
                         String qrCodeFilename = eintrag.getNummer() + ".png";
                         Path qrDatei = qrCodeGenerator.createQrCodeAsImageFile(qrCodeUrl, qrCodeFilename);
                         return qrDatei.toFile();
