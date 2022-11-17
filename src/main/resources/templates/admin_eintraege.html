@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QR-Kalender Admin Eintragspanel</title>
+</head>
+<body>
+    <h3 th:text="'Einträge für Kalender ' + ${kalender.bezeichnung} + ' für ' + ${kalender.empfaenger}"></h3>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>UUID</th>
+            <th>Nummer</th>
+            <th>Bild</th>
+            <th>Inhalt</th>
+            <th>Link</th>
+            <th>Aufrufbar ab</th>
+            <th>Erstellungsdatum</th>
+            <th>Änderungsdatum</th>
+            <th>Edit</th>
+            <th>Löschen</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${allEintraege.empty}">
+            <td colspan="10">Keine Einträge gefunden</td>
+        </tr>
+        <tr th:each="eintrag : ${allEintraege}">
+            <td th:text="${eintrag.id}"></td>
+            <td th:text="${eintrag.nummer}"></td>
+            <td th:text="${eintrag.bild}"></td>
+            <td th:text="${eintrag.inhalt}"></td>
+            <td th:text="${eintrag.link}"></td>
+            <td th:text="${eintrag.aufrufbarAb}"></td>
+            <td th:text="${eintrag.erstellungsdatum}"></td>
+            <td th:text="${eintrag.aenderungsdatum}"></td>
+            <td>
+                <form th:action="@{'/editeintrag?kalenderId=' + ${kalender.id}}" method="post">
+                    <input type="hidden" name="eintragId" id="editEintragId" th:value="${eintrag.id}" />
+                    <button type="submit">Edit</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{'/deleteeintrag?kalenderId=' + ${kalender.id}}" method="post">
+                    <input type="hidden" name="eintragId" id="deleteEintragId" th:value="${eintrag.id}" />
+                    <button type="submit">Löschen</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <h2>Anlegen/Ändern</h2>
+    <form th:action="@{'/saveeintrag?kalenderId=' + ${kalender.id}}" th:object="${eintrag}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <p>Nummer: <input type="text" th:field="*{nummer}" /></p>
+        <p>Inhalt: <input type="text" th:field="*{inhalt}" /></p>
+        <p>Link <input type="text" th:field="*{link}" /></p>
+        <p>Aufrufbar ab: <input type="date" th:field="*{aufrufbarAb}" /></p>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    </form>
+    <div th:if="${eintrag.id != null}">
+        <p th:if="${eintrag.bild != null}">Datei: <span th:text="${eintrag.bild}"/>
+            <form th:if="${eintrag.bild != null}" th:action="@{'/deletefile?eintragId=' + ${eintrag.id}}" method="post">
+                <input type="hidden" name="eintragId" id="deleteEintragBild" th:value="${eintrag.id}" />
+                <button type="submit">Datei löschen</button>
+            </form>
+        </p>
+        <form th:if="${eintrag.bild == null}" th:action="@{'/uploadfile?kalenderId=' + ${kalender.id} + '&eintragId=' + ${eintrag.id}}" method="POST" enctype="multipart/form-data">
+            <table>
+                <tr><td>Datei zum Upload:</td><td><input type="file" name="file" /></td></tr>
+                <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+            </table>
+        </form>
+    </div>
+    <a th:href="@{/admin}">Kalenderübersicht</a>
+</body>
+</html>

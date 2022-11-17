@@ -1,23 +1,26 @@
-package de.qr.calendar.controller;
+package de.qr.calendar.controller.web;
 
 import de.qr.calendar.model.Eintrag;
 import de.qr.calendar.repository.EintragRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@RestController
+@Slf4j
+@Controller
 @RequestMapping(path = "/eintrag")
 public class EintragController {
 
     @Autowired
     private EintragRepository eintragRepository;
 
-    @GetMapping(path = "/{id}")
-    public Eintrag getEintragById(@PathVariable UUID id) {
-        // TODO: Prüfung, ob aufrufbarAb schon erreicht ist und ggf. Fehler als Device liefern
-        return eintragRepository.findById(id)
-                .orElseThrow();
+    @GetMapping("/qr")
+    public String getEintragByScannedQrCode(@RequestParam(name = "id") String id, Model model) {
+        model.addAttribute("id", id);
+        return "eintrag";
     }
 }

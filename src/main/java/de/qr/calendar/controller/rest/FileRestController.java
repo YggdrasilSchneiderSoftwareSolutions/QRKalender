@@ -1,4 +1,4 @@
-package de.qr.calendar.controller;
+package de.qr.calendar.controller.rest;
 
 import de.qr.calendar.file.FileService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,13 +17,13 @@ import java.util.UUID;
 
 @RestController
 @Slf4j
-@RequestMapping(path = "/file")
-public class FileController {
+@RequestMapping(path = "/api/file")
+public class FileRestController {
 
     private FileService fileService;
 
     @Autowired
-    public FileController(FileService fileService) {
+    public FileRestController(FileService fileService) {
         this.fileService = fileService;
     }
 

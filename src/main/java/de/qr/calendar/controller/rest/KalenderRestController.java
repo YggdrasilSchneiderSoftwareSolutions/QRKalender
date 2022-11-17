@@ -1,4 +1,4 @@
-package de.qr.calendar.controller;
+package de.qr.calendar.controller.rest;
 
 import de.qr.calendar.model.Eintrag;
 import de.qr.calendar.model.Kalender;
@@ -26,8 +26,8 @@ import java.util.zip.ZipOutputStream;
 
 @Slf4j
 @RestController
-@RequestMapping(path = "/kalender")
-public class KalenderController {
+@RequestMapping(path = "/api/kalender")
+public class KalenderRestController {
 
     private KalenderRepository kalenderRepository;
 
@@ -39,9 +39,9 @@ public class KalenderController {
     private String serverDomain;
 
     @Autowired
-    public KalenderController(KalenderRepository kalenderRepository,
-                              EintragRepository eintragRepository,
-                              QrCodeGenerator qrCodeGenerator) {
+    public KalenderRestController(KalenderRepository kalenderRepository,
+                                  EintragRepository eintragRepository,
+                                  QrCodeGenerator qrCodeGenerator) {
         this.kalenderRepository = kalenderRepository;
         this.eintragRepository = eintragRepository;
         this.qrCodeGenerator = qrCodeGenerator;

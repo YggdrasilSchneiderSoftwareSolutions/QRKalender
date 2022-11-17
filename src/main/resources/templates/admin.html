@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QR-Kalender Adminpanel</title>
+</head>
+<body>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>UUID</th>
+            <th>Bezeichnung</th>
+            <th>Empfänger</th>
+            <th>Gültig von</th>
+            <th>Gültig bis</th>
+            <th>Erstelldatum</th>
+            <th>Änderungsdatum</th>
+            <th>Anzahl Einträge</th>
+            <th>Editieren</th>
+            <th>Einträge</th>
+            <th>Löschen</th>
+        </tr>
+        </thead>
+        <tbody>
+        <h1>Kalender</h1>
+        <h2>Übersicht</h2>
+        <tr th:if="${allKalender.empty}">
+            <td colspan="11">Keine Kalender gefunden</td>
+        </tr>
+        <tr th:each="kalender : ${allKalender}">
+            <td th:text="${kalender.id}"></td>
+            <td th:text="${kalender.bezeichnung}"></td>
+            <td th:text="${kalender.empfaenger}"></td>
+            <td th:text="${kalender.gueltigVon}"></td>
+            <td th:text="${kalender.gueltigBis}"></td>
+            <td th:text="${kalender.erstellungsdatum}"></td>
+            <td th:text="${kalender.aenderungsdatum}"></td>
+            <td th:text="${kalender.eintraege.size}"></td>
+            <td>
+                <form th:action="@{/editkalender}" method="post">
+                    <input type="hidden" name="kalenderId" id="editKalenderId" th:value="${kalender.id}" />
+                    <button type="submit">Edit</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/eintraegekalender}" method="get">
+                    <input type="hidden" name="kalenderId" id="eintragKalenderId" th:value="${kalender.id}" />
+                    <button type="submit">Einträge</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/deletekalender}" method="post">
+                    <input type="hidden" name="kalenderId" id="deleteKalenderId" th:value="${kalender.id}" />
+                    <button type="submit">Löschen</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <h2>Anlegen/Ändern</h2>
+    <form action="#" th:action="@{/savekalender}" th:object="${kalender}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <p>Bezeichnung: <input type="text" th:field="*{bezeichnung}" /></p>
+        <p>Empfänger: <input type="text" th:field="*{empfaenger}" /></p>
+        <p>Gültig von: <input type="date" th:field="*{gueltigVon}" /></p>
+        <p>Gültig bis: <input type="date" th:field="*{gueltigBis}" /></p>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    </form>
+</body>
+</html>
