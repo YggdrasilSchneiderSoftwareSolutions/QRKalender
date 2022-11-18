@@ -130,9 +130,10 @@ public class KalenderRestController {
             // einzelne QR-Dateien in Liste speichern
             List<File> qrCodeFiles = kalender.getEintraege().stream()
                     .map(eintrag -> {
-                        String qrCodeUrl = Paths
-                                .get(serverDomain, "eintrag", "qr?id=" + eintrag.getId())
-                                .toString();
+                        String qrCodeUrl = serverDomain
+                                + "eintrag"
+                                + "qr?id="
+                                + eintrag.getId();
                         String qrCodeFilename = eintrag.getNummer() + ".png";
                         Path qrDatei = qrCodeGenerator.createQrCodeAsImageFile(qrCodeUrl, qrCodeFilename);
                         return qrDatei.toFile();
