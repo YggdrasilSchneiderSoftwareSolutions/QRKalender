@@ -131,7 +131,7 @@ public class KalenderRestController {
             List<File> qrCodeFiles = kalender.getEintraege().stream()
                     .map(eintrag -> {
                         String qrCodeUrl = serverDomain
-                                + "eintrag"
+                                + "eintrag/"
                                 + "qr?id="
                                 + eintrag.getId();
                         String qrCodeFilename = eintrag.getNummer() + ".png";
