@@ -60,7 +60,7 @@ public class AdminController {
                         kal.setGueltigBis(kalender.getGueltigBis());
                         return kalenderRepository.save(kal);
                     })
-                    .get();
+                    .orElseThrow();
             log.info("Kalender '{}' editiert", kalender.getBezeichnung());
         } else { // Neuer Kalender
             kalenderRepository.save(kalender);
@@ -85,7 +85,7 @@ public class AdminController {
 
     @PostMapping("/editkalender")
     public String editKalender(@RequestParam(name = "kalenderId") UUID kalenderId, Model model) {
-        Kalender kalenderToEdit = kalenderRepository.findById(kalenderId).get();
+        Kalender kalenderToEdit = kalenderRepository.findById(kalenderId).orElseThrow();
         log.info("Kalender '{}' für Änderung gelesen", kalenderToEdit.getBezeichnung());
         Iterable<Kalender> allKalender = kalenderRepository.findAll();
         model.addAttribute("allKalender", allKalender);
@@ -95,7 +95,7 @@ public class AdminController {
 
     @GetMapping("/eintraegekalender")
     public String getEintragsPageForKalender(@RequestParam(name = "kalenderId") UUID kalenderId, Model model) {
-        Kalender kalender = kalenderRepository.findById(kalenderId).get();
+        Kalender kalender = kalenderRepository.findById(kalenderId).orElseThrow();
         model.addAttribute("kalender", kalender);
         Iterable<Eintrag> allEintraege = kalender.getEintraege()
                 .stream()
@@ -115,7 +115,7 @@ public class AdminController {
     public String saveEintrag(@ModelAttribute Eintrag eintrag,
                               @RequestParam(name = "kalenderId") UUID kalenderId,
                               Model model) {
-        Kalender selectedKalender = kalenderRepository.findById(kalenderId).get();
+        Kalender selectedKalender = kalenderRepository.findById(kalenderId).orElseThrow();
         model.addAttribute("kalender", selectedKalender);
         eintrag.setKalender(selectedKalender);
         if (eintrag.getId() != null) { // Eintrag wird editiert
@@ -150,7 +150,7 @@ public class AdminController {
     public String deleteEintrag(@RequestParam(name = "eintragId") UUID eintragId,
                                 @RequestParam(name = "kalenderId") UUID kalenderId,
                                 Model model) {
-        Eintrag eintragToDelete = eintragRepository.findById(eintragId).get();
+        Eintrag eintragToDelete = eintragRepository.findById(eintragId).orElseThrow();
         // Bild löschen, wenn vorhanden
         if (eintragToDelete.getBild() != null) {
             String zielDatei = kalenderId.toString()
@@ -163,7 +163,7 @@ public class AdminController {
         eintragRepository.deleteById(eintragId);
         log.info("Eintrag-ID {} gelöscht", eintragId);
 
-        Kalender kalender = kalenderRepository.findById(kalenderId).get();
+        Kalender kalender = kalenderRepository.findById(kalenderId).orElseThrow();
         model.addAttribute("kalender", kalender);
         Iterable<Eintrag> allEintraege = kalender.getEintraege()
                 .stream()
@@ -178,12 +178,12 @@ public class AdminController {
     public String editEintrag(@RequestParam(name = "kalenderId") UUID kalenderId,
                               @RequestParam(name = "eintragId") UUID eintragId,
                               Model model) {
-        Kalender kalender = kalenderRepository.findById(kalenderId).get();
+        Kalender kalender = kalenderRepository.findById(kalenderId).orElseThrow();
         Iterable<Eintrag> allEintraege = kalender.getEintraege()
                 .stream()
                 .sorted(Comparator.comparing(Eintrag::getNummer))
                 .collect(Collectors.toList());
-        Eintrag eintragToEdit = eintragRepository.findById(eintragId).get();
+        Eintrag eintragToEdit = eintragRepository.findById(eintragId).orElseThrow();
         model.addAttribute("kalender", kalender);
         model.addAttribute("allEintraege", allEintraege);
         model.addAttribute("eintrag", eintragToEdit);
@@ -200,11 +200,11 @@ public class AdminController {
                 file.getOriginalFilename(), kalenderId.toString(), eintragId.toString());
         fileService.saveFile(kalenderId, file);
         // Dateiname in Eintrag speichern
-        Eintrag eintrag = eintragRepository.findById(eintragId).get();
+        Eintrag eintrag = eintragRepository.findById(eintragId).orElseThrow();
         eintrag.setBild(file.getOriginalFilename());
         Eintrag updEintrag = eintragRepository.save(eintrag);
 
-        Kalender kalender = kalenderRepository.findById(kalenderId).get();
+        Kalender kalender = kalenderRepository.findById(kalenderId).orElseThrow();
         model.addAttribute("kalender", kalender);
         Iterable<Eintrag> allEintraege = kalender.getEintraege()
                 .stream()
@@ -217,7 +217,7 @@ public class AdminController {
 
     @PostMapping("/deletefile")
     public String deleteFile(@RequestParam(name = "eintragId") UUID eintragId, Model model) {
-        Eintrag eintrag = eintragRepository.findById(eintragId).get();
+        Eintrag eintrag = eintragRepository.findById(eintragId).orElseThrow();
         Kalender kalender = eintrag.getKalender();
         // Datei auf dem Filesystem löschen
         String zielDatei = kalender.getId()

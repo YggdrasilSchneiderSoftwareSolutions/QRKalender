@@ -39,7 +39,7 @@ public class EintragController {
         LocalDate heute = LocalDate.now();
         model.addAttribute("today", heute);
 
-        Eintrag eintrag = eintragRepository.findById(id).get();
+        Eintrag eintrag = eintragRepository.findById(id).orElseThrow();
         model.addAttribute("eintrag", eintrag);
         model.addAttribute("kalender", eintrag.getKalender());
 
