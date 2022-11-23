@@ -150,6 +150,16 @@ public class AdminController {
     public String deleteEintrag(@RequestParam(name = "eintragId") UUID eintragId,
                                 @RequestParam(name = "kalenderId") UUID kalenderId,
                                 Model model) {
+        Eintrag eintragToDelete = eintragRepository.findById(eintragId).get();
+        // Bild löschen, wenn vorhanden
+        if (eintragToDelete.getBild() != null) {
+            String zielDatei = kalenderId.toString()
+                    + FileSystems.getDefault().getSeparator()
+                    + eintragToDelete.getBild();
+            log.info("Lösche Datei '{}' zu Eintrag-ID {}", zielDatei, eintragId);
+            fileService.deleteFile(zielDatei);
+        }
+        // Eintrag löschen
         eintragRepository.deleteById(eintragId);
         log.info("Eintrag-ID {} gelöscht", eintragId);
 
@@ -184,7 +194,7 @@ public class AdminController {
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    @RequestParam(name = "kalenderId") UUID kalenderId,
                                    @RequestParam(name = "eintragId") UUID eintragId,
-                                                   Model model) {
+                                   Model model) {
         // Datei in Ordner des Kalenders speichern
         log.info("Speichere Datei: {} für Kalender-ID {} zur Eintrag-ID{}",
                 file.getOriginalFilename(), kalenderId.toString(), eintragId.toString());
