@@ -43,24 +43,27 @@ public class EintragController {
         model.addAttribute("eintrag", eintrag);
         model.addAttribute("kalender", eintrag.getKalender());
 
-        String zielDatei = eintrag.getKalender().getId().toString()
-                + FileSystems.getDefault().getSeparator()
-                + eintrag.getBild();
-        // Datei als Resource laden
-        Resource resource = fileService.getFileAsResource(zielDatei);
-        // Datei in Base64-String konvertieren und Content-Type ermitteln
-        String encodedString = "";
-        String contentType = "";
-        try {
-            encodedString = Base64.getMimeEncoder()
-                    .encodeToString(Files.readAllBytes(resource.getFile().toPath()));
-            contentType = Files.probeContentType(resource.getFile().toPath());
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage());
-        }
+        // Check, ob Bild überhaupt vorhanden, um FileNotFoundException zu verhindern
+        if (eintrag.getBild() != null) {
+            String zielDatei = eintrag.getKalender().getId().toString()
+                    + FileSystems.getDefault().getSeparator()
+                    + eintrag.getBild();
+            // Datei als Resource laden
+            Resource resource = fileService.getFileAsResource(zielDatei);
+            // Datei in Base64-String konvertieren und Content-Type ermitteln
+            String encodedString = "";
+            String contentType = "";
+            try {
+                encodedString = Base64.getMimeEncoder()
+                        .encodeToString(Files.readAllBytes(resource.getFile().toPath()));
+                contentType = Files.probeContentType(resource.getFile().toPath());
+            } catch (IOException e) {
+                log.error(e.getLocalizedMessage());
+            }
 
-        model.addAttribute("imageContentType", contentType);
-        model.addAttribute("eintragImage", encodedString);
+            model.addAttribute("imageContentType", contentType);
+            model.addAttribute("eintragImage", encodedString);
+        }
 
         return "eintrag";
     }
