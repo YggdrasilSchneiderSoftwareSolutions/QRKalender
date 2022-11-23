@@ -19,6 +19,7 @@ import java.nio.file.FileSystems;
 import java.util.Comparator;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Controller
 @Slf4j
@@ -39,6 +40,9 @@ public class AdminController {
     @GetMapping("/admin")
     public String renderAdminPage(Model model) {
         Iterable<Kalender> allKalender = kalenderRepository.findAll();
+        log.info("{} Kalender insgesamt gefunden", StreamSupport
+                .stream(allKalender.spliterator(), false)
+                .count());
         model.addAttribute("allKalender", allKalender);
         model.addAttribute("kalender", new Kalender());
         return "admin";
@@ -57,9 +61,10 @@ public class AdminController {
                         return kalenderRepository.save(kal);
                     })
                     .get();
-
+            log.info("Kalender '{}' editiert", kalender.getBezeichnung());
         } else { // Neuer Kalender
             kalenderRepository.save(kalender);
+            log.info("Kalender '{}' angelegt", kalender.getBezeichnung());
         }
 
         Iterable<Kalender> allKalender = kalenderRepository.findAll();
@@ -71,6 +76,7 @@ public class AdminController {
     @PostMapping("/deletekalender")
     public String deleteKalender(@RequestParam(name = "kalenderId") UUID kalenderId, Model model) {
         kalenderRepository.deleteById(kalenderId);
+        log.info("Kalender-ID {} gelöscht", kalenderId);
         Iterable<Kalender> allKalender = kalenderRepository.findAll();
         model.addAttribute("allKalender", allKalender);
         model.addAttribute("kalender", new Kalender());
@@ -80,6 +86,7 @@ public class AdminController {
     @PostMapping("/editkalender")
     public String editKalender(@RequestParam(name = "kalenderId") UUID kalenderId, Model model) {
         Kalender kalenderToEdit = kalenderRepository.findById(kalenderId).get();
+        log.info("Kalender '{}' für Änderung gelesen", kalenderToEdit.getBezeichnung());
         Iterable<Kalender> allKalender = kalenderRepository.findAll();
         model.addAttribute("allKalender", allKalender);
         model.addAttribute("kalender", kalenderToEdit);
@@ -94,6 +101,11 @@ public class AdminController {
                 .stream()
                 .sorted(Comparator.comparing(Eintrag::getNummer))
                 .collect(Collectors.toList());
+
+        log.info("{} Einträge zu Kalender '{}' gefunden", StreamSupport
+                .stream(allEintraege.spliterator(), false)
+                .count(), kalender.getBezeichnung());
+
         model.addAttribute("allEintraege", allEintraege);
         model.addAttribute("eintrag", new Eintrag());
         return "admin_eintraege";
@@ -123,6 +135,8 @@ public class AdminController {
             eintragRepository.save(eintrag);
         }
 
+        log.info("Eintrag zu Kalender '{}' gespeichert", selectedKalender.getBezeichnung());
+
         Iterable<Eintrag> allEintraege = selectedKalender.getEintraege()
                 .stream()
                 .sorted(Comparator.comparing(Eintrag::getNummer))
@@ -137,6 +151,8 @@ public class AdminController {
                                 @RequestParam(name = "kalenderId") UUID kalenderId,
                                 Model model) {
         eintragRepository.deleteById(eintragId);
+        log.info("Eintrag-ID {} gelöscht", eintragId);
+
         Kalender kalender = kalenderRepository.findById(kalenderId).get();
         model.addAttribute("kalender", kalender);
         Iterable<Eintrag> allEintraege = kalender.getEintraege()
