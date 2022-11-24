@@ -54,7 +54,7 @@
     <form th:action="@{'/saveeintrag?kalenderId=' + ${kalender.id}}" th:object="${eintrag}" method="post">
         <input type="hidden" th:field="*{id}">
         <p>Nummer: <input type="text" th:field="*{nummer}" /></p>
-        <p>Inhalt: <input type="text" th:field="*{inhalt}" /></p>
+        <p>Inhalt: <textarea rows="10" cols="50" th:field="*{inhalt}"></textarea></p>
         <p>Link <input type="text" th:field="*{link}" /></p>
         <p>Aufrufbar ab: <input type="date" th:field="*{aufrufbarAb}" /></p>
         <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
