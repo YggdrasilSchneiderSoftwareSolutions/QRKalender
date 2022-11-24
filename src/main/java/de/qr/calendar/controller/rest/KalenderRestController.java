@@ -17,6 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -123,7 +124,7 @@ public class KalenderRestController {
 
         byte[] zipFile = new byte[0];
 
-        log.info("Erstelle zip-File für Kalender {} - {}", kalender.getId(), kalender.getBezeichnung());
+        log.info("Erstelle zip-File für Kalender {} - '{}'", kalender.getId(), kalender.getBezeichnung());
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             var zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
 
@@ -134,7 +135,9 @@ public class KalenderRestController {
                                 + "eintrag/"
                                 + "qr?id="
                                 + eintrag.getId();
-                        String qrCodeFilename = eintrag.getNummer() + ".png";
+                        String qrCodeFilename = kalender.getId().toString()
+                                + FileSystems.getDefault().getSeparator()
+                                + eintrag.getNummer() + ".png";
                         Path qrDatei = qrCodeGenerator.createQrCodeAsImageFile(qrCodeUrl, qrCodeFilename);
                         return qrDatei.toFile();
                     })
