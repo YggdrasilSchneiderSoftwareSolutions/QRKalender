@@ -123,13 +123,13 @@ public class AdminController {
                     .map(e -> {
                         e.setKalender(eintrag.getKalender());
                         e.setNummer(eintrag.getNummer());
-                        e.setBild(eintrag.getBild());
+                        // Bild nicht setzen, sonst null (Bild hat eigene form!)
                         e.setInhalt(eintrag.getInhalt());
                         e.setLink(eintrag.getLink());
                         e.setAufrufbarAb(eintrag.getAufrufbarAb());
                         return eintragRepository.save(e);
                     })
-                    .get();
+                    .orElseThrow();
 
         } else { // Neuer Eintrag
             eintragRepository.save(eintrag);
