@@ -35,6 +35,10 @@ public class Kalender {
 
     private String empfaenger;
 
+    @Column(name = "erstellerId", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
+    @Type(type = "uuid-char")
+    private UUID erstellerId;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate gueltigVon;

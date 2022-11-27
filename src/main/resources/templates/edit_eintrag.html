@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QR-Kalender Liste</title>
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+</head>
+<body>
+    <h1>Eintrag anlegen/ändern</h1>
+    <h2><a th:href="@{'/kalender/' + ${kalender.id}}"><span class="label label-primary" th:text="${kalender.bezeichnung} + ' für ' + ${kalender.empfaenger}">Text</span></a></h2>
+    <form th:action="@{'/kalender/' + ${kalender.id} + '/eintrag'}" th:object="${eintrag}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <table>
+            <tr><td>Nummer:</td><td><input type="text" th:field="*{nummer}" /></td></tr>
+            <tr><td>Inhalt:</td><td><textarea type="text" cols="100" rows="10" th:field="*{inhalt}" /></td></tr>
+            <tr><td>Link:</td><td><input type="text" th:field="*{link}" /></td></tr>
+            <tr><td>Aufrufbar ab:</td><td><input type="date" th:field="*{aufrufbarAb}" /></td></tr>
+            <tr><td></td><td><input type="submit" value="Submit" class="btn btn-primary"/> <input type="reset" value="Reset"  class="btn btn-default"/></td></tr>
+        </table>
+    </form>
+    <div th:if="${eintrag.id != null}">
+        <p th:if="${eintrag.bild != null}">Datei: <span th:text="${eintrag.bild}"/>
+        <form th:if="${eintrag.bild != null}" th:action="@{'/deletefile?eintragId=' + ${eintrag.id}}" method="post">
+            <input type="hidden" name="eintragId" id="deleteEintragBild" th:value="${eintrag.id}" />
+            <button type="submit" class="btn btn-warning">Datei löschen</button>
+        </form>
+        </p>
+        <form th:if="${eintrag.bild == null}" th:action="@{'/uploadfile?kalenderId=' + ${kalender.id} + '&eintragId=' + ${eintrag.id}}" method="POST" enctype="multipart/form-data">
+            <table>
+                <tr><td>Datei zum Upload:</td><td><input type="file" name="file" /></td></tr>
+                <tr><td></td><td><input type="submit" value="Upload" class="btn btn-primary"/></td></tr>
+            </table>
+        </form>
+    </div>
+
+
+</body>
+</html>
