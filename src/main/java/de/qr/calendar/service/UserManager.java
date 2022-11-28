@@ -1,5 +1,6 @@
 package de.qr.calendar.service;
 
+import de.qr.calendar.exception.UserAlreadyExistsException;
 import de.qr.calendar.model.User;
 import de.qr.calendar.repository.UserRepository;
 import org.apache.commons.logging.Log;
@@ -37,7 +38,7 @@ public class UserManager implements UserDetailsManager, UserDetailsPasswordServi
     public void createUser(UserDetails user) {
         User ex = repository.findByUsername(user.getUsername());
         if (ex != null) {
-            throw new RuntimeException("User with username "+user.getUsername()+" already exists!");
+            throw new UserAlreadyExistsException("User with username "+user.getUsername()+" already exists!");
         }
         if (user instanceof User) {
             User u = new User(null, user.getUsername(), ((User) user).getUsertype(), user.getPassword(), user.isEnabled(), ((User) user).isPasswordExpired());

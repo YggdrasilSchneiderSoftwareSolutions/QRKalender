@@ -80,19 +80,19 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // FIXME Security zunächst deaktiviert
-        return http.csrf().disable().authorizeRequests().anyRequest().permitAll().and().build();
-        /*return http
+        //return http.csrf().disable().authorizeRequests().anyRequest().permitAll().and().build();
+        return http
                 .csrf(csrf -> csrf
-                        .ignoringAntMatchers("/h2-console/**", "/eintrag/**")
+                        .ignoringAntMatchers("/h2-console/**", "/eintrag/**", "/user/registration", "/user/registration/**", "/css/**", "/img/**", "/style/**", "/fonts/**", "/scripts/**")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .authorizeRequests( auth -> auth
-                        .antMatchers("/h2-console/**", "/eintrag/**").permitAll()
+                        .antMatchers("/h2-console/**", "/eintrag/**", "/user/registration", "/user/registration/**", "/css/**", "/img/**", "/style/**", "/fonts/**", "/scripts/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions().sameOrigin())
                 .formLogin(withDefaults())
                 //.formLogin((form) -> form.loginPage("/login.html").permitAll())
-                .build();*/
+                .build();
     }
 
     @Bean

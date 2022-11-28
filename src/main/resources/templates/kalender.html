@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QR-Kalender Liste</title>
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+</head>
+<body>
+    <h1>Anlegen/Ändern</h1>
+    <form action="#" th:action="@{/kalender}" th:object="${kalender}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <p>Bezeichnung: <input type="text" th:field="*{bezeichnung}" /></p>
+        <p>Empfänger: <input type="text" th:field="*{empfaenger}" /></p>
+        <p>Gültig von: <input type="date" th:field="*{gueltigVon}" /></p>
+        <p>Gültig bis: <input type="date" th:field="*{gueltigBis}" /></p>
+        <p><input type="submit" value="Submit" class="btn btn-primary"/> <input type="reset" value="Reset"  class="btn btn-default"/></p>
+    </form>
+<div th:if="${kalender.getId() != null}">
+    <h2>Einträge</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>UUID</th>
+            <th>Nummer</th>
+            <th>Bild</th>
+            <th>Inhalt</th>
+            <th>Link</th>
+            <th>Aufrufbar ab</th>
+            <th>Erstellungsdatum</th>
+            <th>Änderungsdatum</th>
+            <th>Edit</th>
+            <th>Löschen</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${eintraege.empty}">
+            <td colspan="10">Keine Einträge gefunden</td>
+        </tr>
+        <tr th:each="eintrag : ${eintraege}">
+            <td th:text="${eintrag.id}"></td>
+            <td th:text="${eintrag.nummer}"></td>
+            <td th:text="${eintrag.bild}"></td>
+            <td th:text="${eintrag.inhalt}"></td>
+            <td th:text="${eintrag.link}"></td>
+            <td th:text="${eintrag.aufrufbarAb}"></td>
+            <td th:text="${eintrag.erstellungsdatum}"></td>
+            <td th:text="${eintrag.aenderungsdatum}"></td>
+            <td>
+                <form th:action="@{'/kalender/' + ${kalender.id} + '/eintrag/' + ${eintrag.id}}" method="get">
+                    <button type="submit" class="btn btn-primary">Edit</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{'/kalender/' + ${kalender.id} + '/eintrag/' + ${eintrag.id}}" method="delete">
+                    <input type="hidden" name="eintragId" th:value="${eintrag.id}" />
+                    <button type="submit" class="btn btn-warning">Löschen</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form th:action="@{'/kalender/' + ${kalender.id} + '/eintrag/'}" method="get">
+        <button type="submit" class="btn btn-primary">Neuer Eintrag</button>
+    </form>
+
+
+</div>
+</body>
+</html>

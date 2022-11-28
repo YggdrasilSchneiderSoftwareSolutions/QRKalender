@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QR-Kalender Liste</title>
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+</head>
+<body>
+<h1>Kalender</h1>
+<h2>Übersicht</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>UUID</th>
+            <th>Bezeichnung</th>
+            <th>Empfänger</th>
+            <th>Gültig von</th>
+            <th>Gültig bis</th>
+            <th>Erstelldatum</th>
+            <th>Änderungsdatum</th>
+            <th>Anzahl Einträge</th>
+            <th>Editieren</th>
+            <th>Einträge</th>
+            <th>Löschen</th>
+            <th>QR-Codes zip</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${allKalender.empty}">
+            <td colspan="12">Keine Kalender gefunden</td>
+        </tr>
+        <tr th:each="kalender : ${allKalender}">
+            <td th:text="${kalender.id}"></td>
+            <td th:text="${kalender.bezeichnung}"></td>
+            <td th:text="${kalender.empfaenger}"></td>
+            <td th:text="${kalender.gueltigVon}"></td>
+            <td th:text="${kalender.gueltigBis}"></td>
+            <td th:text="${kalender.erstellungsdatum}"></td>
+            <td th:text="${kalender.aenderungsdatum}"></td>
+            <td th:text="${kalender.eintraege.size}"></td>
+            <td>
+                <form th:action="@{'/kalender/'+${kalender.id}}" method="get">
+                    <input type="hidden" name="kalenderId" id="editKalenderId" th:value="${kalender.id}" />
+                    <button type="submit">Bearbeiten</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{'/kalender/'+${kalender.id}}" method="delete">
+                    <input type="hidden" name="kalenderId" id="deleteKalenderId" th:value="${kalender.id}" />
+                    <button type="submit">Löschen</button>
+                </form>
+            </td>
+            <td>
+                <a th:href="'/api/kalender/zip/' + ${kalender.id}">QR-Codes generieren</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+<form th:action="@{'/kalender/new'}" method="get">
+    <button type="submit" class="btn btn-primary">Neuer Kalender</button>
+</form>
+
+</body>
+</html>
