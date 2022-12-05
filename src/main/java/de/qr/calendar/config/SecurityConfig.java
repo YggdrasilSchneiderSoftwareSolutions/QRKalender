@@ -79,14 +79,19 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // FIXME Security zunächst deaktiviert
         //return http.csrf().disable().authorizeRequests().anyRequest().permitAll().and().build();
         return http
                 .csrf(csrf -> csrf
-                        .ignoringAntMatchers("/h2-console/**", "/eintrag/**", "/user/registration", "/user/registration/**", "/css/**", "/img/**", "/style/**", "/fonts/**", "/scripts/**")
+                        .ignoringAntMatchers("/h2-console/**", "/eintrag/**", "/user/registration",
+                                "/user/registration/**", "/css/**", "/img/**", "/style/**", "/fonts/**",
+                                "/scripts/**")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .authorizeRequests( auth -> auth
-                        .antMatchers("/h2-console/**", "/eintrag/**", "/user/registration", "/user/registration/**", "/css/**", "/img/**", "/style/**", "/fonts/**", "/scripts/**").permitAll()
+                        .antMatchers("/h2-console/**", "/eintrag/**", "/user/registration",
+                                "/user/registration/**", "/css/**", "/img/**", "/style/**", "/fonts/**",
+                                "/scripts/**").permitAll()
+                        // FIXME Admin-Seiten zunächst deaktiviert
+                        .antMatchers("/admin**").denyAll()
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions().sameOrigin())
